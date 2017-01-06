@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+		<div class='container'>
+			<div class='row' style="padding: 15px;">
+				<div class='col-sm-12'>
+				<h1>Kuik Dinner Planning Central</h1>
+				</div>
+			</div>
+			<div class='row' style="padding: 15px;">
+				<div class='col-sm-3'>
+					<a class="btn btn-large btn-primary btn-block" href="{{ url_for('mealCreate') }}" role="button">Create a New Dinner Date!</a>
+					
+				</div>
+			</div>
+			<div class='row' style="padding: 15px;">
+				<div class='col-sm-3'>
+					<a class="btn btn-large btn-primary btn-block" href="{{ url_for('allMeals') }}" role='button'>Change a Dinner Date</a>
+				</div>
+			</div>	
+		</div>
+
+	{% endblock %}
+
+

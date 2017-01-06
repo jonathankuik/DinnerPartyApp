@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+		<div class='container'>
+			<div class='row'>
+				<div class='col-sm-12'>
+				<h1>New Meal Added!</h1>
+				<h3><a href="{{url_for('home')}}"/>Home Page</a></h3>
+				<h3><a href="{{url_for('allMeals')}}"/>All Meals</a></h3>
+				</div>
+
+			</div>
+			<div class='row'>
+				<div class='col-sm-4'>		
+					<h3 style="margin-bottom: 0px;">Your Name: {{meal.guest}}</h3>
+					</br>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-4'>		
+					<h3 style="margin-bottom: 0px;">Entree: {{meal.entree.name}}</h3>
+					<p>{{meal.entree.description}}</p>
+					</br>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-4'>		
+					<h3 style="margin-bottom: 0px;">Appetizer: {{meal.appetizer.name}}</h3>
+					<p>{{meal.appetizer.description}}</p>
+					</br>
+				</div>
+			</div>
+			<div class='row'>
+				<div class='col-sm-4'>		
+					<h3 style="margin-bottom: 0px;">Logistics</h3>
+					<p>Date: {{meal.date.strftime('%m-%d-%Y')}}</p>
+					<p>Email provided: {{meal.email}}</p>
+					</br>
+				</div>
+			</div>
+
+		</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+		<div class='container'>
+		<div class='row'>
+		<div class='col-sm-12'>
+		<h1>Kuik Meals</h1>
+		</div>
+		</div>
+		{% for i in entrees %}
+		<div class='col-sm-4'>		
+		<h3 style="margin-bottom: 0px;">{{i.name}}</h3>
+	</br>
+		</div>
+		{% endfor %}
+		</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+		<style type="text/css">
+            .thumbnails li img{
+                width: 150px;
+                height: 150px;
+            }
+        </style>
+		<div class='container'>
+			<div class='row'>
+				<div class='col-sm-12'>
+					<h1>Kuik Meals</h1>
+				</div>
+			</div>
+			<div class='col-sm-8'>
+				<form method="POST" action="/forms">
+				    {{ form.csrf_token }}
+				    <div class="form group">
+				    	<div>
+					    {{ form.guest_name.label }} {{ form.guest_name(size=20, class="form-control") }}
+					    	{% for error in form.guest_name.errors %}
+            				<span class="alert arlert-warning" > [{{ error }}]</span>
+          					{% endfor %}<br>
+					    </div>
+					    <div>
+					    {{form.entree.label}}  {{form.entree(class="image-picker", id="selectImage")}}
+
+					    </div>
+					    
+
+						<div>
+							{{form.appetizer.label}}  {{form.appetizer(class="form-control")}}
+						</div>
+						<div>
+							{{form.email.label}}  {{form.email(size=20, class="form-control")}}
+						</div>
+						<div>
+
+					    	{{form.date.label}} {{form.date(class="form-control")}}
+
+		    			</div>
+		    		</div>
+		    		</br>
+		    		<div>
+					<button type="submit" class="btn btn-success">Submit</button>		
+					</div>
+					</form>	
+
+				<script>
+						$(document).ready(function () {
+    						$("#selectImage").imagepicker();
+    					});
+				</script>
+			</div>
+		</div>
+
+{% endblock %}
