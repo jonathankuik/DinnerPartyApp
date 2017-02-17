@@ -21,7 +21,7 @@ session = DBSession()
 
 
 # Menu for UrbanBurger
-entree1 = Entree(name="Double Broccoli Quinoa", 
+entree1 = Entree(name="Double Broccolsui Quinoa", 
        description="""Broccoli and Quinoa served with a broccoli pesto. 
        Served with your choice of toppings which include toasted almonds, 
        parmesan cheese, and avacado.""", photo_path="http://placehold.it/350x150")
