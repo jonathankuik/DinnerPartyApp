@@ -7,6 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
+engine = create_engine('postgresql:///dinner')	
 Base = declarative_base()
 
 #####################Class Code##############################
@@ -48,5 +49,4 @@ class Meal(Base):
 	appetizer = relationship(Appetizer)
 	email = Column(String)
 
-engine = create_engine('sqlite:///recipes.db')	
 Base.metadata.create_all(engine)

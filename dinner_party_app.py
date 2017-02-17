@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 from dinner_party_db_create import Appetizer, Base, Entree, Meal
 
-engine = create_engine('sqlite:///recipes.db')
+engine = create_engine('postgresql:///dinner')
 
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed 	through a DBSession instance
