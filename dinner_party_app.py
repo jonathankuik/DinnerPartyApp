@@ -6,22 +6,30 @@ from wtforms import StringField, SelectField, widgets, validators
 from wtforms.widgets import html_params, Select, HTMLString
 from wtforms.widgets.core import escape
 from wtforms.fields.html5 import DateField, EmailField
-app = Flask(__name__)
 
+from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+#from sqlalchemy.orm import db.sessionmaker
 
 
 from dinner_party_db_create import Appetizer, Base, Entree, Meal
 
-engine = create_engine('postgresql:///dinner')
+from flask.ext.heroku import Heroku
+
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+
+#engine = create_engine('postgresql:///dinner')
 
 # Bind the engine to the metadata of the Base class so that the
-# declaratives can be accessed 	through a DBSession instance
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+# declaratives can be accessed 	through a DBdb.session instance
+#Base.metadata.bind = engine
+#DBdb.session = db.sessionmaker(bind=engine)
+#db.session = DBdb.session()
 
+app = Flask(__name__)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
+heroku = Heroku(app)
+db = SQLAlchemy(app)
 
 
 class SelectOptionRender(object):
@@ -87,27 +95,27 @@ class MyForm(FlaskForm):
 @app.route('/')
 @app.route('/home')
 def home():
-	entrees = session.query(Entree).all()
+	entrees = db.session.query(Entree).all()
 
 	return render_template('kuikMealHome.html', entrees=entrees)
 
 
 @app.route('/allMeals')
 def allMeals():
-	meals = session.query(Meal).all()
+	meals = db.session.query(Meal).all()
 	return render_template('allMeals.html', meals=meals)
 
 
 @app.route('/mealEdit/<int:mealid>', methods=['GET', 'POST'])
 def mealEdit(mealid):
 	form = MyForm()
-	entrees = session.query(Entree).all()
-	appetizers = session.query(Appetizer).all()
+	entrees = db.session.query(Entree).all()
+	appetizers = db.session.query(Appetizer).all()
 	form.entree.choices = [(i.id,i.name, i.photo_path) for i in entrees]
 	form.appetizer.choices = [(i.id,i.name) for i in appetizers ]
 
 	if request.method == 'GET':
-		mealEdit = session.query(Meal).filter_by(id=mealid).one()
+		mealEdit = db.session.query(Meal).filter_by(id=mealid).one()
 		form.guest_name.data = mealEdit.guest
 		form.email.data = mealEdit.email
 		form.date.data = mealEdit.date
@@ -124,14 +132,14 @@ def mealEdit(mealid):
 					print "field name:%s" % fieldName
 					print "error:%s" % err
 		else:
-			mealEdit = session.query(Meal).filter_by(id=mealid).one()
+			mealEdit = db.session.query(Meal).filter_by(id=mealid).one()
 			mealEdit.guest = form.guest_name.data
 			mealEdit.date = form.date.data
 			mealEdit.email = form.email.data
-			mealEdit.entree = session.query(Entree).filter(Entree.id == form.entree.data).one() 
-			mealEdit.appetizer = session.query(Appetizer).filter(Appetizer.id == form.appetizer.data).one()
-			session.add(mealEdit)
-			session.commit()
+			mealEdit.entree = db.session.query(Entree).filter(Entree.id == form.entree.data).one() 
+			mealEdit.appetizer = db.session.query(Appetizer).filter(Appetizer.id == form.appetizer.data).one()
+			db.session.add(mealEdit)
+			db.session.commit()
 			return redirect(url_for('mealDetails', mealid = mealid))
 	return render_template('editMeal.html', form=form)
 
@@ -144,8 +152,8 @@ def mealEdit(mealid):
 @app.route('/mealCreate', methods=['GET', 'POST'])
 def mealCreate():
 	form = MyForm()
-	entrees = session.query(Entree).all()
-	appetizers = session.query(Appetizer).all()
+	entrees = db.session.query(Entree).all()
+	appetizers = db.session.query(Appetizer).all()
 	form.entree.choices = [(i.id,i.name, i.photo_path) for i in entrees]
 	form.appetizer.choices = [(i.id,i.name) for i in appetizers ]
 
@@ -159,17 +167,17 @@ def mealCreate():
 			guest1 = form.guest_name.data
 			date1 = form.date.data
 			email1 = form.email.data
-			entree1 = session.query(Entree).filter(Entree.id == form.entree.data).one() 
-			appetizer1 = session.query(Appetizer).filter(Appetizer.id == form.appetizer.data).one()
+			entree1 = db.session.query(Entree).filter(Entree.id == form.entree.data).one() 
+			appetizer1 = db.session.query(Appetizer).filter(Appetizer.id == form.appetizer.data).one()
 			meal1 = Meal(guest=guest1, entree=entree1, appetizer=appetizer1, date=date1, email=email1)
-			session.add(meal1)
-			session.commit()
+			db.session.add(meal1)
+			db.session.commit()
 			return redirect(url_for('mealDetails', mealid = meal1.id))
 	return render_template('mealCreate.html', form=form)
 
 @app.route('/meal/<int:mealid>/details')
 def mealDetails(mealid):
-	meal1 = session.query(Meal).filter(Meal.id==mealid).one()
+	meal1 = db.session.query(Meal).filter(Meal.id==mealid).one()
 	return render_template('mealDetail.html', meal=meal1)
 
 
