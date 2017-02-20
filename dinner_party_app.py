@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 #from sqlalchemy.orm import db.sessionmaker
 
 
-from dinner_party_db_create import Appetizer, Base, Entree, Meal
+from dinner_party_db_create import Appetizer, Entree, Meal
 
 from flask.ext.heroku import Heroku
 

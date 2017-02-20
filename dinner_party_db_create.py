@@ -1,22 +1,18 @@
 
 ###################Configuration Code########################
-import sys
-
-from sqlalchemy import Column, ForeignKey, Integer, String, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
-
-engine = create_engine('postgresql:///dinner')	
-Base = declarative_base()
+from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
+ 
+app = Flask(__name__)
+db = SQLAlchemy(app)
 
 #####################Class Code##############################
 
-class Appetizer(Base):
+class Appetizer(db.Model):
 	__tablename__ = 'appetizer'
-	id = Column(Integer, primary_key=True)
-	name = Column(String, nullable = False)
-	description = Column(String)
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String, nullable = False)
+	description = db.Column(db.String)
 	@property
 	def serialize(self):
 	    return {'id': self.id,
@@ -24,12 +20,12 @@ class Appetizer(Base):
 	    		'description': self.description,
 	    		}
 
-class Entree(Base):
+class Entree(db.Model):
 	__tablename__ = 'entree'
-	id = Column(Integer, primary_key=True)
-	name = Column(String, nullable=False)
-	description = Column(String)
-	photo_path = Column(String)
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String, nullable=False)
+	description = db.Column(db.String)
+	photo_path = db.Column(db.String)
 	@property
 	def serialize(self):
 	    return {'id': self.id,
@@ -38,15 +34,14 @@ class Entree(Base):
 	    		}
 
 
-class Meal(Base):
+class Meal(db.Model):
 	__tablename__ = 'meal'
-	id = Column(Integer, primary_key=True)
-	guest = Column(String, nullable=False)
-	date = Column(Date, nullable=False)
-	entree_id = Column(Integer, ForeignKey("entree.id"), nullable=False)
-	entree = relationship(Entree)
-	appetizer_id = Column(Integer, ForeignKey("appetizer.id"))
-	appetizer = relationship(Appetizer)
-	email = Column(String)
+	id = db.Column(db.Integer, primary_key=True)
+	guest = db.Column(db.String, nullable=False)
+	date = db.Column(db.Date, nullable=False)
+	entree_id = db.Column(db.Integer, db.ForeignKey("entree.id"), nullable=False)
+	entree = db.relationship(Entree)
+	appetizer_id = db.Column(db.Integer, db.ForeignKey("appetizer.id"))
+	appetizer = db.relationship(Appetizer)
+	email = db.Column(db.String)
 
-Base.metadata.create_all(engine)
