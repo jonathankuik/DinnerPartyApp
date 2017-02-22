@@ -17,7 +17,7 @@ from dinner_party_db_create import Appetizer, Entree, Meal
 
 from flask.ext.heroku import Heroku
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+
 
 #engine = create_engine('postgresql:///dinner')
 
@@ -31,7 +31,7 @@ app = Flask(__name__)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
 heroku = Heroku(app)
 db = SQLAlchemy(app)
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 class SelectOptionRender(object):
     """
