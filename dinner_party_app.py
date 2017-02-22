@@ -95,9 +95,7 @@ class MyForm(FlaskForm):
 @app.route('/')
 @app.route('/home')
 def home():
-	entrees = db.session.query(Entree).all()
-
-	return render_template('kuikMealHome.html', entrees=entrees)
+	return render_template('kuikMealHome.html')
 
 
 @app.route('/allMeals')
