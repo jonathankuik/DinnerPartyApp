@@ -1,0 +1,1 @@
+web: gunicorn dinner_party_app:app
