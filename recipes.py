@@ -2,22 +2,28 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import time
 from datetime import date
-from dinner_party_db_create import Entree, Base, Appetizer, Meal
 
-engine = create_engine('postgresql:///dinner')
+
+from dinner_party_db_create import Appetizer, Entree, Meal
+
+from flask.ext.heroku import Heroku
+from flask.ext.sqlalchemy import SQLAlchemy
+
+
+
+#engine = create_engine('postgresql:///dinner')
+
 # Bind the engine to the metadata of the Base class so that the
-# declaratives can be accessed through a DBSession instance
-Base.metadata.bind = engine
+# declaratives can be accessed     through a DBdb.session instance
+#Base.metadata.bind = engine
+#DBdb.session = db.sessionmaker(bind=engine)
+#db.session = DBdb.session()
 
-DBSession = sessionmaker(bind=engine)
-# A DBSession() instance establishes all conversations with the database
-# and represents a "staging zone" for all the objects loaded into the
-# database session object. Any change made against the objects in the
-# session won't be persisted into the database until you call
-# session.commit(). If you're not happy about the changes, you can
-# revert all of them back to the last commit by calling
-# session.rollback()
-session = DBSession()
+app = Flask(__name__)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
+heroku = Heroku(app)
+db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 
 # Menu for UrbanBurger
