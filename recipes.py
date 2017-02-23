@@ -33,24 +33,24 @@ entree1 = Entree(name="Double Broccolsui Quinoa",
        Served with your choice of toppings which include toasted almonds, 
        parmesan cheese, and avacado.""", photo_path="http://placehold.it/350x150")
 
-session.add(entree1)
-session.commit()
+db.session.add(entree1)
+db.session.commit()
 
 entree2 = Entree(name="Stuffed Peppers", 
        description="""Bell Peppers stuffed with quinoa, black beans, and cheese!""", photo_path="http://placehold.it/350x150")
 
-session.add(entree2)
-session.commit()
+db.session.add(entree2)
+db.session.commit()
 
 appetizer1 = Appetizer(name="Bruschetta", description="Classic Italian appetizer.")
 
-session.add(appetizer1)
-session.commit()
+db.session.add(appetizer1)
+db.session.commit()
 
 date1 = date(2017, 1, 7)
 
 meal1 = Meal(guest="Ethan and Robyn Ax", date=date1, entree=entree1, appetizer=appetizer1, email="ax@gmail.com")
 
-session.add(meal1)
-session.commit()
+db.session.add(meal1)
+db.session.commit()
 
