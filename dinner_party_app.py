@@ -1,9 +1,9 @@
 
-import os
+import os, logging
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
 from flask_wtf import FlaskForm
 
-from wtforms import StringField, SelectField, widgets, validators
+from wtforms import Form, StringField, SelectField, widgets, validators
 from wtforms.widgets import html_params, Select, HTMLString
 from wtforms.widgets.core import escape
 from wtforms.fields.html5 import DateField, EmailField
@@ -17,6 +17,12 @@ from dinner_party_db_create import Appetizer, Entree, Meal
 
 from flask.ext.heroku import Heroku
 
+if os.environ.get('HEROKU') is not None:
+    import logging
+    stream_handler = logging.StreamHandler()
+    app.logger.addHandler(stream_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('microblog startup')
 
 
 #engine = create_engine('postgresql:///dinner')
@@ -28,10 +34,10 @@ from flask.ext.heroku import Heroku
 #db.session = DBdb.session()
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
 heroku = Heroku(app)
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 class SelectOptionRender(object):
     """
@@ -85,7 +91,7 @@ class SelectFieldCustomOptions(SelectField):
             raise ValueError(self.gettext('Not a valid choice'))
    
 
-class MyForm(FlaskForm):
+class MyForm(Form):
 	guest_name = StringField('Name', [validators.DataRequired()]) 
 	entree = SelectFieldCustomOptions('Entree', coerce=int)
 	appetizer = SelectField('Appetizer', coerce=int)
@@ -155,7 +161,9 @@ def mealCreate():
 	appetizers = db.session.query(Appetizer).all()
 	form.entree.choices = [(i.id,i.name, i.photo_path) for i in entrees]
 	form.appetizer.choices = [(i.id,i.name) for i in appetizers ]
-
+	
+	
+		
 	if request.method == 'POST':
 		if form.validate() == False:
 			for fieldName, errorMessages in form.errors.iteritems():
@@ -172,7 +180,10 @@ def mealCreate():
 			db.session.add(meal1)
 			db.session.commit()
 			return redirect(url_for('mealDetails', mealid = meal1.id))
+
 	return render_template('mealCreate.html', form=form)
+
+	
 
 @app.route('/meal/<int:mealid>/details')
 def mealDetails(mealid):
@@ -183,4 +194,4 @@ def mealDetails(mealid):
 if __name__ == '__main__':
 	app.secret_key = "secret_key"
 	app.debug = True
-	app.run(host = '0.0.0.0', port = 8000)
+	app.run(host = '127.0.0.1', port = 8000)
