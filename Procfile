@@ -1,1 +1,1 @@
-web: gunicorn --debug dinner_party_app:app
+web: gunicorn dinner_party_app:app
