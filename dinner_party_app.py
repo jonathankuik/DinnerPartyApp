@@ -34,10 +34,10 @@ if os.environ.get('HEROKU') is not None:
 #db.session = DBdb.session()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
 heroku = Heroku(app)
 db = SQLAlchemy(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 class SelectOptionRender(object):
     """
