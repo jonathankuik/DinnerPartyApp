@@ -34,10 +34,10 @@ if os.environ.get('HEROKU') is not None:
 #db.session = DBdb.session()
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///dinner'
 heroku = Heroku(app)
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 class SelectOptionRender(object):
     """
@@ -113,24 +113,15 @@ def allMeals():
 
 @app.route('/mealEdit/<int:mealid>', methods=['GET', 'POST'])
 def mealEdit(mealid):
-	form = MyForm()
+	form = MyForm(request.form)
 	entrees = db.session.query(Entree).all()
 	appetizers = db.session.query(Appetizer).all()
 	form.entree.choices = [(i.id,i.name, i.photo_path) for i in entrees]
 	form.appetizer.choices = [(i.id,i.name) for i in appetizers ]
 
-	if request.method == 'GET':
-		mealEdit = db.session.query(Meal).filter_by(id=mealid).one()
-		form.guest_name.data = mealEdit.guest
-		form.email.data = mealEdit.email
-		form.date.data = mealEdit.date
-		form.entree.data = mealEdit.entree
-		entree = mealEdit.entree_id
-		return render_template('editMeal.html', form=form, entree=entree, mealid=mealid)
-
-
-
 	if request.method == 'POST':
+		print "This is something!" 
+
 		if form.validate() == False:
 			for fieldName, errorMessages in form.errors.iteritems():
 				for err in errorMessages:
@@ -146,6 +137,22 @@ def mealEdit(mealid):
 			db.session.add(mealEdit)
 			db.session.commit()
 			return redirect(url_for('mealDetails', mealid = mealid))
+
+
+
+
+	if request.method == 'GET':
+		mealEdit = db.session.query(Meal).filter_by(id=mealid).one()
+		form.guest_name.data = mealEdit.guest
+		form.email.data = mealEdit.email
+		form.date.data = mealEdit.date
+		form.entree.data = mealEdit.entree
+		entree = mealEdit.entree_id
+		return render_template('editMeal.html', form=form, entree=entree, mealid=mealid)
+
+
+
+	
 	return render_template('editMeal.html', form=form)
 
 
@@ -156,7 +163,7 @@ def mealEdit(mealid):
 
 @app.route('/mealCreate', methods=['GET', 'POST'])
 def mealCreate():
-	form = MyForm()
+	form = MyForm(request.form)
 	entrees = db.session.query(Entree).all()
 	appetizers = db.session.query(Appetizer).all()
 	form.entree.choices = [(i.id,i.name, i.photo_path) for i in entrees]
